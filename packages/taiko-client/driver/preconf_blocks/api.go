@@ -80,12 +80,6 @@ func (s *PreconfBlockAPIServer) BuildPreconfBlock(c echo.Context) error {
 		"parentHash", reqBody.ExecutableData.ParentHash.Hex(),
 	)
 
-	// Check if the fee recipient the current operator or the next operator if its in handover window.
-	if s.rpc.L1Beacon != nil {
-		if err := s.checkLookaheadHandover(reqBody.ExecutableData.FeeRecipient, s.rpc.L1Beacon.CurrentSlot()); err != nil {
-			return s.returnError(c, http.StatusBadRequest, err)
-		}
-	}
 
 	difficulty, err := encoding.CalculatePacayaDifficulty(new(big.Int).SetUint64(reqBody.ExecutableData.Number))
 	if err != nil {
